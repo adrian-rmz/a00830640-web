@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import CharacterCard from "../components/CharacterCard";
+import { charactersSchema } from "../utils/schemas";
 
 export default function HomePage() {
   const [characters, setCharacters] = useState([
@@ -27,7 +28,9 @@ export default function HomePage() {
         throw new Error("Failed to fetch data");
       }
       const data = await response.json();
-      setCharacters(data.results);
+      // Validate the data with Zod
+      const parsedData = charactersSchema.parse(data.results);
+      setCharacters(parsedData);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
